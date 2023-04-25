@@ -1,12 +1,7 @@
 <script setup lang="ts">
-import draggable from "vuedraggable";
-const foods = ref([
-  "Bay Cha",
-  "Num Banh Chok",
-  "Kuy Teav",
-  "Bai Sach Chrouk",
-  "Kralan",
-]);
+const { $client } = useNuxtApp();
+
+// const { data } = useAsyncData(() => $client.tag.getAll.query());
 </script>
 
 <template>
@@ -15,11 +10,6 @@ const foods = ref([
     <section>
       <ItemList />
     </section>
-    <!-- <draggable v-model="foods" tag="ul">
-      <template #item="{ element: meal }">
-        <li>{{ meal }}</li>
-      </template>
-    </draggable> -->
   </main>
 </template>
 
