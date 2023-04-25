@@ -1,7 +1,7 @@
 <script setup lang="ts">
-const { $client } = useNuxtApp();
 
-// const { data } = useAsyncData(() => $client.tag.getAll.query());
+
+
 </script>
 
 <template>

@@ -1,7 +1,6 @@
 import { Prisma } from "@prisma/client";
 
 export default defineEventHandler(async (event) => {
-  const prisma = prismaClient();
   const id = Number(event.context.params!.id);
   const body = await readBody<Prisma.TagUpdateInput>(event);
 
