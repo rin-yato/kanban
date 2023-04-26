@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Task" ADD COLUMN     "tagId" INTEGER;
+
+-- AddForeignKey
+ALTER TABLE "Task" ADD CONSTRAINT "Task_tagId_fkey" FOREIGN KEY ("tagId") REFERENCES "Tag"("id") ON DELETE SET NULL ON UPDATE CASCADE;
