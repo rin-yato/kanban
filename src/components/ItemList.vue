@@ -23,9 +23,8 @@ const deleteById = async (id: number) => {
 const ok = ref(false);
 
 const log = (e: any) => {
-  const task = e.added.element;
-
   if (e.added) {
+    const task = e.added.element;
     let newPosition: number;
     const newIndex = e.added.newIndex;
 
@@ -50,6 +49,7 @@ const log = (e: any) => {
   }
 
   if (e.moved) {
+    const task = e.moved.element;
     let newPosition: number;
     const newIndex = e.moved.newIndex;
 
