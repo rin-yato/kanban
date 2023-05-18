@@ -25,15 +25,16 @@ model List {
 }
 
 model Task {
-  id          Int      @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
+  position    Int?
   name        String
   description String?
-  listId      Int
-  list        List     @relation(fields: [listId], references: [id])
-  tagId       Int?
-  Tag         Tag?     @relation(fields: [tagId], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  listId    Int
+  list      List     @relation(fields: [listId], references: [id])
+  tagId     Int?
+  Tag       Tag?     @relation(fields: [tagId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Tag {

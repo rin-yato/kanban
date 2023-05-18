@@ -1,27 +1,25 @@
 <script lang="ts" setup>
-import { Task } from '@prisma/client';
-import { FixStupidPrisma } from '@/utils/types/types'
 defineProps<{
-  id: number,
-  title: string,
-  tag?: string
-}>()
+  id: number;
+  title: string;
+  tag?: string;
+}>();
 
-
-const emit = defineEmits(["refresh"])
+const emit = defineEmits(["refresh"]);
 
 const deleteTask = async (id: number) => {
   await useFetch("/api/tasks/" + id, {
     method: "DELETE",
-  })
-  // newTaskName.value = ""
-  emit("refresh")
-}
+  });
 
+  emit("refresh");
+};
 </script>
- 
+
 <template>
-  <div class="w-full bg-white p-3 rounded-md mt-2 hover:ring-1 ring-indigo-400 duration-100 cursor-pointer">
+  <div
+    class="w-full bg-white p-3 rounded-md mt-2 hover:ring-1 ring-indigo-400 duration-100 cursor-pointer"
+  >
     <div class="flex-row flex justify-between">
       <h2 class="mb-3">{{ title }}</h2>
       <button @click="deleteTask(id)">
