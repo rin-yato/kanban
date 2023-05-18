@@ -22,13 +22,7 @@
   "dependencies": {
     "@formkit/auto-animate": "1.0.0-beta.6",
     "@prisma/client": "4.13.0",
-    "@storyblok/nuxt": "^5.4.2",
-    "@trpc/client": "^10.21.1",
-    "@trpc/server": "^10.21.1",
     "daisyui": "^2.51.5",
-    "trpc-nuxt": "^0.9.0",
-    "vuedraggable": "^4.1.0",
-    "ytdl-core": "^4.11.4",
-    "zod": "^3.21.4"
+    "vuedraggable": "^4.1.0"
   }
 }
