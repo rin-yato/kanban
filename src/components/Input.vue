@@ -1,26 +1,41 @@
 <script lang="ts" setup>
-const { listId } = defineProps<{ listId: number }>()
+import { Task } from '@prisma/client';
+
+const { listId, tasks } = defineProps<{ listId: number; tasks: Task[] }>()
 const inputRef = ref<HTMLInputElement>()
 const { data: tags, refresh } = await useFetch("/api/tags")
 
 const newTaskName = ref("")
 const selectedTag = ref<{ id: number; name: string } | null>(null)
 
-const emit = defineEmits(["refresh", "create"])
+const emit = defineEmits(["refresh", "create", "add"])
 
 const createTask = async () => {
   emit("create")
+  let hightestPos = tasks.length === 0 ? 0 : tasks[0].position!
+  console.log(tasks)
+  emit("add", {
+    id: Math.floor(Math.random() * 1000000000),
+    name: newTaskName.value,
+    listId: listId,
+    tagId: selectedTag.value?.id || null,
+    position: hightestPos + 80000,
+    description: '',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  })
+  // return
   await useFetch("/api/tasks", {
     method: "POST",
     body: {
       name: newTaskName.value,
       listId: listId,
       tagId: selectedTag.value?.id,
+      position: hightestPos + 80000,
     },
   })
-  newTaskName.value = ""
-  emit("refresh")
 
+  newTaskName.value = ""
 }
 
 onMounted(() => {

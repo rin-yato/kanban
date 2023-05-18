@@ -1,12 +1,17 @@
 <script lang="ts" setup>
-import { List } from '@prisma/client';
+import { List, Task } from '@prisma/client';
 import { FixStupidPrisma } from '@/utils/types/types'
+import draggable from 'vuedraggable'
+
+type CustomList = List & {
+  Task: Task[]
+}
 
 const { list } = defineProps<{
-  list: FixStupidPrisma<List>
+  list: FixStupidPrisma<CustomList>
 }>()
 
-const emit = defineEmits(['refresh'])
+const emit = defineEmits(['refresh', "add"])
 
 const deleteById = async (id: number) => {
   await useFetch('/api/lists/' + id, {
@@ -15,15 +20,55 @@ const deleteById = async (id: number) => {
   emit("refresh")
 }
 
-const { data: tasks, refresh } = await useFetch("/api/tasks")
-const ownTasks = computed(() => {
-  return tasks.value?.filter((task) => task.listId === list.id)
-
-})
-
-console.log(tasks.value)
-
 const ok = ref(false)
+
+const log = (e: any) => {
+
+  console.log(e)
+
+  if (e.added) {
+    const task = e.added.element
+    let newPosition: number;
+    const newIndex = e.added.newIndex
+
+    if (list.Task[newIndex + 1] && list.Task[newIndex - 1]) {
+      newPosition = (list.Task[newIndex + 1].position! + list.Task[newIndex - 1].position!) / 2
+    } else if (newIndex === 0) {
+      newPosition = (list.Task[1]?.position || 0) + 80000
+    } else {
+      newPosition = list.Task[newIndex - 1].position! / 2
+    }
+    useFetch("/api/tasks/" + task.id, {
+      method: "PUT",
+      body: {
+        listId: list.id,
+        position: newPosition!
+      }
+    })
+  }
+
+  if (e.moved) {
+    const task = e.moved.element
+    let newPosition: number;
+    const newIndex = e.moved.newIndex
+
+    if (list.Task[newIndex + 1] && list.Task[newIndex - 1]) {
+      newPosition = (list.Task[newIndex + 1].position! + list.Task[newIndex - 1].position!) / 2
+    } else if (newIndex === 0) {
+      newPosition = list.Task[1].position! + 80000
+    } else {
+      newPosition = list.Task[newIndex - 1].position! / 2
+    }
+
+    useFetch('/api/tasks/' + task.id, {
+      method: 'PUT',
+      body: {
+        position: newPosition!
+      }
+    })
+  }
+
+}
 
 </script>
 
@@ -53,11 +98,15 @@ const ok = ref(false)
       <Icon name="ic:round-add-circle-outline" size="24px" class="mr-1" />Add New
     </button>
     <div v-show="ok">
-      <Input @refresh="refresh" @create="ok = false" :listId="list.id" />
+      <Input @refresh="emit('refresh')" @add="(data) => emit('add', data)" @create="ok = false" :listId="list.id"
+        :tasks="list.Task" />
     </div>
-    <div v-auto-animate>
-      <Item @refresh="refresh" v-for="task in ownTasks" :key="task.id" :title="task.name" :id="task.id"
-        :tag="task.Tag?.name" />
+    <div>
+      <draggable @change="log" :list="list.Task" tag="div" group="tasks" :itemKey="list.name" :key="list.id">
+        <template #item="{ element: task }">
+          <Item @refresh="emit('refresh')" :key="task.id" :title="task.name" :id="task.id" :tag="task.Tag?.name" />
+        </template>
+      </draggable>
     </div>
   </div>
 </template>

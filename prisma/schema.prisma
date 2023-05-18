@@ -26,6 +26,7 @@ model List {
 
 model Task {
   id          Int      @id @default(autoincrement())
+  position    Int?
   name        String
   description String?
   listId      Int
